@@ -1,6 +1,6 @@
 # AboutMe v2 Theme
 
-**Current version:** `0.4.3`
+**Current version:** `0.4.4`
 
 A modern, production-ready Hugo theme for personal websites, portfolios, and blogs. Built with Tailwind CSS v4, TypeScript, and optimized for performance with multi-variant export support.
 

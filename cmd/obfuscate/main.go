@@ -63,25 +63,25 @@ var protectedSet = map[string]bool{
 	"data:pgp-error":              true,
 	"data:umami-event":            true,
 	// Search JS data attributes (must not be obfuscated)
-	"data:index-url":              true,
-	"data:base-path":              true,
-	"data:visible-count":          true,
-	"id:theme-toggle":             true,
-	"id:mobile-menu-button":       true,
-	"id:mobile-drawer":            true,
-	"id:mobile-drawer-overlay":    true,
-	"id:mobile-drawer-close":      true,
-	"id:contact-config":           true,
+	"data:index-url":           true,
+	"data:base-path":           true,
+	"data:visible-count":       true,
+	"id:theme-toggle":          true,
+	"id:mobile-menu-button":    true,
+	"id:mobile-drawer":         true,
+	"id:mobile-drawer-overlay": true,
+	"id:mobile-drawer-close":   true,
+	"id:contact-config":        true,
 	// Blog search IDs (must not be obfuscated — JS references them)
-	"id:blog-search":              true,
-	"id:blog-search-input":        true,
-	"id:blog-search-tags":         true,
-	"id:blog-search-status":       true,
-	"id:blog-server-list":         true,
-	"id:blog-results":             true,
-	"id:blog-clear-filters":       true,
-	"id:blog-toggle-tags":         true,
-	"id:reading-server-list":      true,
+	"id:blog-search":         true,
+	"id:blog-search-input":   true,
+	"id:blog-search-tags":    true,
+	"id:blog-search-status":  true,
+	"id:blog-server-list":    true,
+	"id:blog-results":        true,
+	"id:blog-clear-filters":  true,
+	"id:blog-toggle-tags":    true,
+	"id:reading-server-list": true,
 }
 
 // nameItem represents a discovered name to potentially obfuscate.
@@ -130,32 +130,32 @@ func main() {
 
 	// Phase 3: rewrite files
 	var mu sync.Mutex
-	var totalReplacements int
+	var totalChangedFiles int
 	var wg sync.WaitGroup
 
 	// Process files in parallel batches (3× CPU cores)
-		workers := runtime.NumCPU() * 3
-		if *verbose {
-			fmt.Fprintf(os.Stderr, "Using %d workers (%d CPUs × 3)\n", workers, runtime.NumCPU())
-		}
-		sem := make(chan struct{}, workers)
-		for _, f := range files {
-			wg.Add(1)
-			sem <- struct{}{}
-			go func(filePath string) {
-				defer wg.Done()
-				defer func() { <-sem }()
+	workers := runtime.NumCPU() * 3
+	if *verbose {
+		fmt.Fprintf(os.Stderr, "Using %d workers (%d CPUs × 3)\n", workers, runtime.NumCPU())
+	}
+	sem := make(chan struct{}, workers)
+	for _, f := range files {
+		wg.Add(1)
+		sem <- struct{}{}
+		go func(filePath string) {
+			defer wg.Done()
+			defer func() { <-sem }()
 
-				count := replaceInFile(filePath, mapping, *dryRun, *verbose)
-				mu.Lock()
-			totalReplacements += count
+			changed := replaceInFile(filePath, mapping, *dryRun, *verbose)
+			mu.Lock()
+			totalChangedFiles += changed
 			mu.Unlock()
 		}(f)
 	}
 	wg.Wait()
 
 	if *verbose {
-		fmt.Fprintf(os.Stderr, "Total replacements: %d across %d files\n", totalReplacements, len(files))
+		fmt.Fprintf(os.Stderr, "Changed files: %d of %d\n", totalChangedFiles, len(files))
 	}
 
 	// Write mapping file if not dry run
@@ -167,7 +167,7 @@ func main() {
 		}
 	}
 
-	fmt.Printf("Obfuscation complete. %d files processed, %d replacements.\n", len(files), totalReplacements)
+	fmt.Printf("Obfuscation complete. %d files processed, %d files changed.\n", len(files), totalChangedFiles)
 
 	// Suppress unused
 	_ = assets
@@ -551,24 +551,11 @@ func replaceInFile(filePath string, mapping map[string]string, dryRun, verbose b
 		return 0
 	}
 
-	// Count actual changes by comparing original vs replaced classes
-	count := 0
-	// Count based on total bytes changed
-	if len(result) != len(original) {
-		count = 1 // non-trivial change
-	}
-	// More precise: count how many mapping tokens appear in the result
-	for _, token := range mapping {
-		if strings.Count(result, token) > 0 && strings.Count(original, token) == 0 {
-			count++
-		}
-	}
-
 	if dryRun {
 		if verbose {
-			fmt.Fprintf(os.Stderr, "[dry-run] %s: %d tokens changed\n", filePath, count)
+			fmt.Fprintf(os.Stderr, "[dry-run] %s: would change\n", filePath)
 		}
-		return count
+		return 1
 	}
 
 	if err := os.WriteFile(filePath, []byte(result), 0644); err != nil {
@@ -577,10 +564,10 @@ func replaceInFile(filePath string, mapping map[string]string, dryRun, verbose b
 	}
 
 	if verbose {
-		fmt.Fprintf(os.Stderr, "Rewrote %s (%d changes)\n", filePath, count)
+		fmt.Fprintf(os.Stderr, "Rewrote %s\n", filePath)
 	}
 
-	return count
+	return 1
 }
 
 func replaceHTML(content string, mapping map[string]string) string {
@@ -615,21 +602,21 @@ func replaceHTML(content string, mapping map[string]string) string {
 	})
 
 	// Replace id attributes: id="foo" or id=bar (minified HTML may remove quotes)
-		idRe := regexp.MustCompile(`\bid="([^"]*)"|\bid=([^\s>]+)`)
-		result = idRe.ReplaceAllStringFunc(result, func(match string) string {
-			parts := idRe.FindStringSubmatch(match)
-			val := parts[1]
-			if val == "" {
-				val = parts[2]
-			}
-			if val == "" {
-				return match
-			}
-			if token := mapping["id:"+val]; token != "" {
-				return `id="` + token + `"`
-			}
+	idRe := regexp.MustCompile(`\bid="([^"]*)"|\bid=([^\s>]+)`)
+	result = idRe.ReplaceAllStringFunc(result, func(match string) string {
+		parts := idRe.FindStringSubmatch(match)
+		val := parts[1]
+		if val == "" {
+			val = parts[2]
+		}
+		if val == "" {
 			return match
-		})
+		}
+		if token := mapping["id:"+val]; token != "" {
+			return `id="` + token + `"`
+		}
+		return match
+	})
 
 	// Replace data-* attribute names
 	dataRe := regexp.MustCompile(`\b(data-[A-Za-z0-9_-]+)(\s*=)`)

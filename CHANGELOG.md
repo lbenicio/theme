@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.4] - 2026-10-31
+
+### Performance
+
+- Count changed files without rescanning every generated asset once per obfuscation token.
+
 ## [0.4.3] - 2026-10-31
 
 ### Changed
