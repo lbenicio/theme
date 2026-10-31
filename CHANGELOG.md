@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.5] - 2026-10-31
+
+### Performance
+
+- Cache repeated inline JavaScript rewrites during a build to avoid repeating token-map work on generated pages.
+
 ## [0.4.4] - 2026-10-31
 
 ### Performance

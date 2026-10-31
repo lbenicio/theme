@@ -132,6 +132,7 @@ func main() {
 	var mu sync.Mutex
 	var totalChangedFiles int
 	var wg sync.WaitGroup
+	jsRewriteCache := &sync.Map{}
 
 	// Process files in parallel batches (3× CPU cores)
 	workers := runtime.NumCPU() * 3
@@ -146,7 +147,7 @@ func main() {
 			defer wg.Done()
 			defer func() { <-sem }()
 
-			changed := replaceInFile(filePath, mapping, *dryRun, *verbose)
+			changed := replaceInFile(filePath, mapping, *dryRun, *verbose, jsRewriteCache)
 			mu.Lock()
 			totalChangedFiles += changed
 			mu.Unlock()
@@ -527,7 +528,7 @@ func deterministicToken(key, prefix string) string {
 
 // ─── File rewriting ───────────────────────────────────────────────────────────
 
-func replaceInFile(filePath string, mapping map[string]string, dryRun, verbose bool) int {
+func replaceInFile(filePath string, mapping map[string]string, dryRun, verbose bool, jsRewriteCache *sync.Map) int {
 	ext := strings.ToLower(filepath.Ext(filePath))
 	content, err := os.ReadFile(filePath)
 	if err != nil {
@@ -538,11 +539,11 @@ func replaceInFile(filePath string, mapping map[string]string, dryRun, verbose b
 
 	switch ext {
 	case ".html", ".htm":
-		result = replaceHTML(original, mapping)
+		result = replaceHTML(original, mapping, jsRewriteCache)
 	case ".css":
 		result = replaceCSS(original, mapping)
 	case ".js":
-		result = replaceJS(original, mapping)
+		result = replaceJS(original, mapping, jsRewriteCache)
 	default:
 		return 0
 	}
@@ -570,9 +571,9 @@ func replaceInFile(filePath string, mapping map[string]string, dryRun, verbose b
 	return 1
 }
 
-func replaceHTML(content string, mapping map[string]string) string {
+func replaceHTML(content string, mapping map[string]string, jsRewriteCache *sync.Map) string {
 	// First, handle inline scripts and styles (before HTML attribute replacement)
-	result := replaceJSText(content, mapping)
+	result := replaceJSText(content, mapping, jsRewriteCache)
 	result = replaceCSSText(result, mapping)
 
 	// Replace class attributes: class="a b c" or class=cls
@@ -797,7 +798,28 @@ func sortMappingByLength(mapping map[string]string) []string {
 	return keys
 }
 
-func replaceJS(content string, mapping map[string]string) string {
+func replaceJS(content string, mapping map[string]string, jsRewriteCache *sync.Map) string {
+	// Hugo repeats the same inline scripts on many generated pages. Rewrite each
+	// distinct small script once instead of rescanning the complete token map for
+	// every copy. The cache is scoped to one obfuscation run, so its mapping is
+	// constant and entries cannot leak between builds.
+	const maxCachedScriptSize = 16 * 1024
+	if len(content) <= maxCachedScriptSize {
+		if cached, ok := jsRewriteCache.Load(content); ok {
+			return cached.(string)
+		}
+	}
+
+	result := rewriteJS(content, mapping)
+	if len(content) <= maxCachedScriptSize {
+		if cached, loaded := jsRewriteCache.LoadOrStore(content, result); loaded {
+			return cached.(string)
+		}
+	}
+	return result
+}
+
+func rewriteJS(content string, mapping map[string]string) string {
 	// Replace class/id/data names inside string arguments in DOM method calls.
 	sorted := sortMappingByLength(mapping)
 	for _, key := range sorted {
@@ -933,7 +955,7 @@ func replaceAllClassStrings(content string, mapping map[string]string) string {
 }
 
 // replaceJSText finds inline <script> blocks in HTML output and applies JS replacements.
-func replaceJSText(html string, mapping map[string]string) string {
+func replaceJSText(html string, mapping map[string]string, jsRewriteCache *sync.Map) string {
 	scriptRe := regexp.MustCompile(`(?is)(<script[^>]*>)(.*?)(</script>)`)
 	return scriptRe.ReplaceAllStringFunc(html, func(match string) string {
 		parts := scriptRe.FindStringSubmatch(match)
@@ -948,7 +970,7 @@ func replaceJSText(html string, mapping map[string]string) string {
 		if strings.Contains(parts[1], "application/ld+json") || strings.Contains(parts[1], "importmap") {
 			return match
 		}
-		return parts[1] + replaceJS(parts[2], mapping) + parts[3]
+		return parts[1] + replaceJS(parts[2], mapping, jsRewriteCache) + parts[3]
 	})
 }
 
