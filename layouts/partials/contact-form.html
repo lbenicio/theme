@@ -2,7 +2,7 @@
 submission authToken – Bearer token for the submission endpoint email – Reply-to / fallback mailto address name – Contact name (falls back to .Site.Params.author) pgpKey – Path to a PGP public key file in static/
 (optional; if empty, PGP is disabled) The PGP armored block is loaded from the file referenced by pgpKey. If pgpKey is empty, the PGP column shows an "unavailable" message. */}} {{ $postUrl := .Params.postUrl | default
 "" }} {{ $authToken := .Params.authToken | default "" }} {{ $email := .Params.email | default .Site.Params.contactEmail | default "" }} {{ $name := .Params.name | default .Site.Params.contactName | default
-.Site.Params.author | default "" }} {{ $pgpKey := .Params.pgpKey | default .Site.Params.pgpPublicKey | default "" }} {{ $pgpKeyUrl := "" }} {{ if $pgpKey }} {{ $pgpKeyUrl = $pgpKey | relURL }} {{ end }} {{ $pgpShim := resources.Get "assets/js/openpgp-shim.mjs" }} {{ $pgpShimUrl := "" }} {{ if $pgpShim }} {{ $pgpShimUrl = $pgpShim.RelPermalink }} {{ end }}
+.Site.Params.author | default "" }} {{ $pgpKey := .Params.pgpKey | default .Site.Params.pgpPublicKey | default "" }} {{ $pgpKeyUrl := "" }} {{ if $pgpKey }} {{ $pgpKeyUrl = $pgpKey | relURL }} {{ end }} {{ $pgpLibrary := resources.Get "assets/js/vendor/openpgp.min.mjs" }} {{ $pgpLibraryUrl := "" }} {{ if $pgpLibrary }} {{ $pgpLibraryUrl = ($pgpLibrary | fingerprint).RelPermalink }} {{ end }}
 
 <section {{ partial "obfuscate/cls" "w-full px-4 pr-4" | safeHTMLAttr }}>
     <h2 {{ partial "obfuscate/cls" "sr-only" | safeHTMLAttr }}>Contact and PGP</h2>
@@ -98,12 +98,11 @@ submission authToken – Bearer token for the submission endpoint email – Repl
                   }
 
                   async function encryptContactMessage(firstName, lastName, email, subject, text){
-                    const pgpShimUrl = '{{ $pgpShimUrl }}';
+                    const pgpLibraryUrl = '{{ $pgpLibraryUrl }}';
                     const pgpKeyUrl = '{{ $pgpKeyUrl }}';
-                    if (!pgpShimUrl) throw new Error('OpenPGP loader unavailable');
+                    if (!pgpLibraryUrl) throw new Error('OpenPGP library unavailable');
                     if (!pgpKeyUrl) throw new Error('PGP public key unavailable');
-                    const pgpShim = await import(pgpShimUrl);
-                    const openpgp = await pgpShim.ensureOpenPGP();
+                    const openpgp = await import(pgpLibraryUrl);
                     if (!openpgp) throw new Error('OpenPGP library unavailable');
                     const keyRes = await fetch(pgpKeyUrl, { cache: 'force-cache' });
                     if (!keyRes.ok) throw new Error('key load failed');
