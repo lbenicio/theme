@@ -16,7 +16,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"time"
@@ -69,27 +68,9 @@ func main() {
 	}
 
 	if *endpoint != "" {
-		req, err := http.NewRequest("POST", *endpoint, bytes.NewReader(body))
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to create request: %v\n", err)
-			os.Exit(1)
-		}
-		req.Header.Set("Content-Type", "application/json")
-		if *token != "" {
-			req.Header.Set("Authorization", "Bearer "+*token)
-		}
-
 		client := &http.Client{Timeout: 10 * time.Second}
-		resp, err := client.Do(req)
-		if err != nil {
+		if err := sendEvent(*endpoint, *token, body, client); err != nil {
 			fmt.Fprintf(os.Stderr, "Failed to send event: %v\n", err)
-			os.Exit(1)
-		}
-		defer resp.Body.Close()
-
-		if resp.StatusCode >= 400 {
-			respBody, _ := io.ReadAll(resp.Body)
-			fmt.Fprintf(os.Stderr, "Server returned %d: %s\n", resp.StatusCode, string(respBody))
 			os.Exit(1)
 		}
 
@@ -98,4 +79,26 @@ func main() {
 		// No endpoint configured: log to stdout
 		fmt.Printf("[analytics] %s\n", string(body))
 	}
+}
+
+func sendEvent(endpoint, token string, body []byte, client *http.Client) error {
+	req, err := http.NewRequest(http.MethodPost, endpoint, bytes.NewReader(body))
+	if err != nil {
+		return fmt.Errorf("create request: %w", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	if token != "" {
+		req.Header.Set("Authorization", "Bearer "+token)
+	}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= http.StatusBadRequest {
+		return fmt.Errorf("server returned %d", resp.StatusCode)
+	}
+	return nil
 }
