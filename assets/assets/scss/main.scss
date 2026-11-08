@@ -3,29 +3,29 @@
  * No Node.js dependency required; processed by Hugo Pipes (Dart Sass / LibSass) */
 
 // 1. Design tokens & CSS custom properties
-@import 'variables';
+@import "variables";
 
 // 2. Reset & base styles
-@import 'reset';
+@import "reset";
 
 // 3. Utility classes (matching the Tailwind patterns used across layouts)
-@import 'typography';
-@import 'layout';
-@import 'spacing';
-@import 'sizing';
-@import 'colors';
-@import 'borders';
-@import 'effects';
-@import 'interactive';
+@import "typography";
+@import "layout";
+@import "spacing";
+@import "sizing";
+@import "colors";
+@import "borders";
+@import "effects";
+@import "interactive";
 
 // 4. Component styles
-@import 'components';
+@import "components";
 
 // 5. Dark mode overrides
-@import 'dark';
+@import "dark";
 
 // 6. Responsive breakpoints
-@import 'responsive';
+@import "responsive";
 
 // 7. Dynamic value overrides (calc, arbitrary values)
-@import 'dynamic';
+@import "dynamic";

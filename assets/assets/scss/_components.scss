@@ -8,13 +8,25 @@
   line-height: 1.75;
 
   // Paragraphs and spacing
-  p, ul, ol, blockquote, pre, table, figure, hr {
+  p,
+  ul,
+  ol,
+  blockquote,
+  pre,
+  table,
+  figure,
+  hr {
     margin-top: 1.25em;
     margin-bottom: 1.25em;
   }
 
   // Headings with proper spacing
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     color: HSL(var(--foreground));
     font-weight: 700;
     line-height: 1.25;
@@ -22,10 +34,18 @@
     margin-bottom: 0.75em;
   }
 
-  h1 { font-size: 2.25em; }
-  h2 { font-size: 1.75em; }
-  h3 { font-size: 1.5em; }
-  h4 { font-size: 1.25em; }
+  h1 {
+    font-size: 2.25em;
+  }
+  h2 {
+    font-size: 1.75em;
+  }
+  h3 {
+    font-size: 1.5em;
+  }
+  h4 {
+    font-size: 1.25em;
+  }
 
   // Links
   a {
@@ -34,17 +54,32 @@
     text-underline-offset: 4px;
   }
 
-  strong, b { color: HSL(var(--foreground)); }
+  strong,
+  b {
+    color: HSL(var(--foreground));
+  }
 
   // Lists
-  ul, ol {
+  ul,
+  ol {
     padding-left: 1.625em;
   }
-  ul { list-style-type: disc; }
-  ol { list-style-type: decimal; }
-  li { margin-top: 0.25em; margin-bottom: 0.25em; }
-  ul > li::marker { color: HSL(var(--muted-foreground)); }
-  ol > li::marker { color: HSL(var(--muted-foreground)); }
+  ul {
+    list-style-type: disc;
+  }
+  ol {
+    list-style-type: decimal;
+  }
+  li {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+  }
+  ul > li::marker {
+    color: HSL(var(--muted-foreground));
+  }
+  ol > li::marker {
+    color: HSL(var(--muted-foreground));
+  }
 
   // Blockquotes
   blockquote {
@@ -61,10 +96,18 @@
     margin-bottom: 2em;
   }
 
-  hr { border-color: HSL(var(--border)); margin-top: 2em; margin-bottom: 2em; }
+  hr {
+    border-color: HSL(var(--border));
+    margin-top: 2em;
+    margin-bottom: 2em;
+  }
 
-    th { border-color: HSL(var(--border)); }
-  td { border-color: HSL(var(--border)); }
+  th {
+    border-color: HSL(var(--border));
+  }
+  td {
+    border-color: HSL(var(--border));
+  }
 
   // Inline code
   :where(code):not(:where(pre *)) {
@@ -139,7 +182,9 @@
   border: 1px solid HSL(var(--border));
   background-color: HSL(var(--card) / 0.5);
   transition: background-color var(--transition-fast);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
 
   &:hover {
     background-color: HSL(var(--card));
@@ -188,12 +233,17 @@
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.25rem;
-  transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
 
   &:focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px HSL(var(--ring));
-    box-shadow: 0 0 0 2px HSL(var(--ring)), 0 0 0 2px HSL(var(--background));
+    box-shadow:
+      0 0 0 2px HSL(var(--ring)),
+      0 0 0 2px HSL(var(--background));
   }
 }
 
@@ -239,7 +289,9 @@
   font-weight: 500;
   background-color: HSL(var(--muted));
   color: HSL(var(--muted-foreground));
-  transition: background-color var(--transition-fast), color var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
 
   &:hover {
     background-color: HSL(var(--accent));
@@ -304,7 +356,9 @@
   border-left: 1px solid HSL(var(--border));
   background-color: HSL(var(--background));
   color: HSL(var(--foreground));
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
@@ -380,14 +434,15 @@
   padding-left: 1.5rem;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     left: -7px;
     top: 0.5rem;
     bottom: 0.5rem;
     width: 3px;
     border-radius: 0.25rem;
-    background-image: linear-gradient(to bottom,
+    background-image: linear-gradient(
+      to bottom,
       HSL(var(--primary) / 0.6),
       HSL(var(--primary) / 0.2),
       transparent
@@ -427,7 +482,9 @@
 
   &:hover {
     background-color: HSL(var(--card));
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -4px rgba(0, 0, 0, 0.1);
   }
 
   &:focus-within {

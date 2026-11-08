@@ -19,7 +19,9 @@ on:
       - completed
   status:
 
-permissions: write-all
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   automerge:

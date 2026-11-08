@@ -20,46 +20,103 @@ $spacers: (
 
 // ── Gap ────────────────────────────────────────────────────────────────────────
 @each $name, $size in $spacers {
-  .gap-#{$name} { gap: $size; }
+  .gap-#{$name} {
+    gap: $size;
+  }
 }
-.gap-px { gap: 1px; }
+.gap-px {
+  gap: 1px;
+}
 
 // ── Space between (flex/grid children) ─────────────────────────────────────────
 @each $name, $size in $spacers {
-  .space-x-#{$name} > * + * { margin-left: $size; }
-  .space-y-#{$name} > * + * { margin-top: $size; }
+  .space-x-#{$name} > * + * {
+    margin-left: $size;
+  }
+  .space-y-#{$name} > * + * {
+    margin-top: $size;
+  }
 }
 
 // ── Padding ────────────────────────────────────────────────────────────────────
 @each $name, $size in $spacers {
-  .p-#{$name}  { padding: $size; }
-  .px-#{$name} { padding-left: $size; padding-right: $size; }
-  .py-#{$name} { padding-top: $size; padding-bottom: $size; }
-  .pt-#{$name} { padding-top: $size; }
-  .pr-#{$name} { padding-right: $size; }
-  .pb-#{$name} { padding-bottom: $size; }
-  .pl-#{$name} { padding-left: $size; }
+  .p-#{$name} {
+    padding: $size;
+  }
+  .px-#{$name} {
+    padding-left: $size;
+    padding-right: $size;
+  }
+  .py-#{$name} {
+    padding-top: $size;
+    padding-bottom: $size;
+  }
+  .pt-#{$name} {
+    padding-top: $size;
+  }
+  .pr-#{$name} {
+    padding-right: $size;
+  }
+  .pb-#{$name} {
+    padding-bottom: $size;
+  }
+  .pl-#{$name} {
+    padding-left: $size;
+  }
 }
 
 // ── Margin ─────────────────────────────────────────────────────────────────────
 @each $name, $size in $spacers {
-  .m-#{$name}  { margin: $size; }
-  .mx-#{$name} { margin-left: $size; margin-right: $size; }
-  .my-#{$name} { margin-top: $size; margin-bottom: $size; }
-  .mt-#{$name} { margin-top: $size; }
-  .mr-#{$name} { margin-right: $size; }
-  .mb-#{$name} { margin-bottom: $size; }
-  .ml-#{$name} { margin-left: $size; }
+  .m-#{$name} {
+    margin: $size;
+  }
+  .mx-#{$name} {
+    margin-left: $size;
+    margin-right: $size;
+  }
+  .my-#{$name} {
+    margin-top: $size;
+    margin-bottom: $size;
+  }
+  .mt-#{$name} {
+    margin-top: $size;
+  }
+  .mr-#{$name} {
+    margin-right: $size;
+  }
+  .mb-#{$name} {
+    margin-bottom: $size;
+  }
+  .ml-#{$name} {
+    margin-left: $size;
+  }
 }
 
 // ── Auto margins ───────────────────────────────────────────────────────────────
-.mx-auto { margin-left: auto; margin-right: auto; }
-.ml-auto { margin-left: auto; }
-.mr-auto { margin-right: auto; }
-.mt-auto { margin-top: auto; }
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+.ml-auto {
+  margin-left: auto;
+}
+.mr-auto {
+  margin-right: auto;
+}
+.mt-auto {
+  margin-top: auto;
+}
 
 // ── Negative margins ───────────────────────────────────────────────────────────
-.-ml-1 { margin-left: -0.25rem; }
-.-ml-3 { margin-left: -0.75rem; }
-.-left-3 { left: -0.75rem; }
-.-left-7px { left: -7px; }
+.-ml-1 {
+  margin-left: -0.25rem;
+}
+.-ml-3 {
+  margin-left: -0.75rem;
+}
+.-left-3 {
+  left: -0.75rem;
+}
+.-left-7px {
+  left: -7px;
+}

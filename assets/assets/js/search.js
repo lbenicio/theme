@@ -21,7 +21,9 @@
   const searchInput = document.getElementById("blog-search-input");
   const tagsContainer = document.getElementById("blog-search-tags");
   const statusEl = document.getElementById("blog-search-status");
-  const serverList = document.getElementById("blog-server-list") || document.getElementById("reading-server-list");
+  const serverList =
+    document.getElementById("blog-server-list") ||
+    document.getElementById("reading-server-list");
 
   // ---- Fetch index ----
   async function fetchPosts() {
@@ -48,7 +50,8 @@
       activeCategories = c ? new Set(c.split(",").filter(Boolean)) : new Set();
       searchQuery = p.get("q") || "";
       currentPage = parseInt(p.get("page")) || 1;
-      if (searchInput && document.activeElement !== searchInput) searchInput.value = searchQuery;
+      if (searchInput && document.activeElement !== searchInput)
+        searchInput.value = searchQuery;
     } catch {
       // silence error
     }
@@ -57,7 +60,8 @@
   function writeURLParams() {
     const sp = new URLSearchParams();
     if (activeTags.size) sp.set("tags", [...activeTags].sort().join(","));
-    if (activeCategories.size) sp.set("categories", [...activeCategories].sort().join(","));
+    if (activeCategories.size)
+      sp.set("categories", [...activeCategories].sort().join(","));
     if (searchQuery) sp.set("q", searchQuery);
     if (currentPage > 1) sp.set("page", String(currentPage));
     const qs = sp.toString();
@@ -75,12 +79,20 @@
       // Category filter
       if (activeCategories.size > 0) {
         const postCats = post.categories || [];
-        if (![...activeCategories].some((c) => postCats.includes(c))) return false;
+        if (![...activeCategories].some((c) => postCats.includes(c)))
+          return false;
       }
       // Text search
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
-        const haystack = [post.title || "", post.description || "", ...(post.tags || []), ...(post.categories || [])].join(" ").toLowerCase();
+        const haystack = [
+          post.title || "",
+          post.description || "",
+          ...(post.tags || []),
+          ...(post.categories || []),
+        ]
+          .join(" ")
+          .toLowerCase();
         if (!haystack.includes(q)) return false;
       }
       return true;
@@ -93,12 +105,18 @@
     const catMap = new Map();
     for (const p of posts) {
       (p.tags || []).forEach((t) => tagMap.set(t, (tagMap.get(t) || 0) + 1));
-      (p.categories || []).forEach((c) => catMap.set(c, (catMap.get(c) || 0) + 1));
+      (p.categories || []).forEach((c) =>
+        catMap.set(c, (catMap.get(c) || 0) + 1),
+      );
     }
     // Sort by count descending, then alphabetically
     const sortFn = (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]);
-    const tags = [...tagMap.entries()].sort(sortFn).map(([name, count]) => ({ type: "tag", value: name, count }));
-    const categories = [...catMap.entries()].sort(sortFn).map(([name, count]) => ({ type: "category", value: name, count }));
+    const tags = [...tagMap.entries()]
+      .sort(sortFn)
+      .map(([name, count]) => ({ type: "tag", value: name, count }));
+    const categories = [...catMap.entries()]
+      .sort(sortFn)
+      .map(([name, count]) => ({ type: "category", value: name, count }));
     return { tags, categories };
   }
 
@@ -114,20 +132,25 @@
     // Combine tags and categories, sorted by count (most popular first), deduplicated by value
     const seen = new Set();
     const all = [];
-    for (const item of [...filterData.tags, ...filterData.categories].sort((a, b) => (b.count || 0) - (a.count || 0))) {
+    for (const item of [...filterData.tags, ...filterData.categories].sort(
+      (a, b) => (b.count || 0) - (a.count || 0),
+    )) {
       if (!seen.has(item.value)) {
         seen.add(item.value);
         all.push(item);
       }
     }
     const BATCH_SIZE = 30;
-    let visibleLimit = parseInt(tagsContainer.dataset.visibleCount) || BATCH_SIZE;
+    let visibleLimit =
+      parseInt(tagsContainer.dataset.visibleCount) || BATCH_SIZE;
     if (visibleLimit < BATCH_SIZE) visibleLimit = BATCH_SIZE;
 
     let html = "";
     const renderItem = (item, isActive) => {
       const prefix = item.type === "tag" ? "#" : "";
-      const activeClass = isActive ? "bg-accent text-accent-foreground ring-2 ring-accent" : "bg-muted text-muted-foreground border hover:bg-accent hover:text-accent-foreground";
+      const activeClass = isActive
+        ? "bg-accent text-accent-foreground ring-2 ring-accent"
+        : "bg-muted text-muted-foreground border hover:bg-accent hover:text-accent-foreground";
       return `<button class="inline-flex items-center gap-1 rounded-full border px-2 py-1 text-xs font-medium transition-colors ${activeClass}" data-filter="${item.type}" data-value="${item.value}">${prefix}${item.value}${isActive ? " ×" : ""}</button>`;
     };
 
@@ -156,7 +179,10 @@
 
     // Clear all button — always visible
     const disabledAttr = selected.size === 0 ? "disabled" : "";
-    const clearClass = selected.size > 0 ? "bg-destructive text-destructive-foreground hover:opacity-80" : "bg-muted text-muted-foreground opacity-50 cursor-not-allowed";
+    const clearClass =
+      selected.size > 0
+        ? "bg-destructive text-destructive-foreground hover:opacity-80"
+        : "bg-muted text-muted-foreground opacity-50 cursor-not-allowed";
     html += `<button class="inline-flex items-center gap-1 rounded-full border px-2 py-1 text-xs font-medium transition-opacity ${clearClass}" id="blog-clear-filters" ${disabledAttr}>Clear all</button>`;
 
     tagsContainer.innerHTML = html;
@@ -225,7 +251,9 @@
       if (serverList) {
         serverList.parentNode.insertBefore(container, serverList.nextSibling);
       } else {
-        const section = document.querySelector("#blog-search")?.closest("section");
+        const section = document
+          .querySelector("#blog-search")
+          ?.closest("section");
         if (section) section.appendChild(container);
       }
     }
@@ -275,7 +303,8 @@
     if (totalPages <= 1) return;
 
     const nav = document.createElement("nav");
-    nav.className = "blog-client-pagination flex flex-col sm:flex-row items-center justify-between gap-4 pt-6";
+    nav.className =
+      "blog-client-pagination flex flex-col sm:flex-row items-center justify-between gap-4 pt-6";
     nav.setAttribute("role", "navigation");
     nav.setAttribute("aria-label", "Pagination");
 
@@ -286,7 +315,8 @@
     let pageButtons = "";
     if (startPage > 1) {
       pageButtons += `<button class="text-sm px-2 py-1.5 rounded-md hover:bg-muted transition-colors text-muted-foreground" data-page="1">1</button>`;
-      if (startPage > 2) pageButtons += `<span class="text-sm px-1 text-muted-foreground">…</span>`;
+      if (startPage > 2)
+        pageButtons += `<span class="text-sm px-1 text-muted-foreground">…</span>`;
     }
     for (let i = startPage; i <= endPage; i++) {
       if (i === currentPage) {
@@ -296,7 +326,8 @@
       }
     }
     if (endPage < totalPages) {
-      if (endPage < totalPages - 1) pageButtons += `<span class="text-sm px-1 text-muted-foreground">…</span>`;
+      if (endPage < totalPages - 1)
+        pageButtons += `<span class="text-sm px-1 text-muted-foreground">…</span>`;
       pageButtons += `<button class="text-sm px-2 py-1.5 rounded-md hover:bg-muted transition-colors text-muted-foreground" data-page="${totalPages}">${totalPages}</button>`;
     }
 
@@ -318,7 +349,8 @@
     });
 
     const container = document.getElementById(CONTAINER_ID);
-    if (container) container.parentNode.insertBefore(nav, container.nextSibling);
+    if (container)
+      container.parentNode.insertBefore(nav, container.nextSibling);
   }
 
   // ---- Main render ----
@@ -329,10 +361,13 @@
     const filtered = filterPosts(posts);
     const filterData = collectFilters(posts);
 
-    const hasFilters = activeTags.size > 0 || activeCategories.size > 0 || searchQuery;
+    const hasFilters =
+      activeTags.size > 0 || activeCategories.size > 0 || searchQuery;
     if (statusEl) {
       const total = filtered.length;
-      statusEl.textContent = hasFilters ? `${total} post${total !== 1 ? "s" : ""} found` : "";
+      statusEl.textContent = hasFilters
+        ? `${total} post${total !== 1 ? "s" : ""} found`
+        : "";
     }
 
     renderTagPills(filterData);
@@ -343,7 +378,8 @@
       document.querySelector(".blog-client-pagination")?.remove();
       if (serverList) serverList.style.display = "";
       const serverNav = serverList?.nextElementSibling;
-      if (serverNav && serverNav.tagName === "NAV") serverNav.style.display = "";
+      if (serverNav && serverNav.tagName === "NAV")
+        serverNav.style.display = "";
       writeURLParams();
       return;
     }
@@ -368,7 +404,11 @@
 
   // Keyboard shortcut: press / to focus search
   document.addEventListener("keydown", (e) => {
-    if (e.key === "/" && document.activeElement !== searchInput && document.activeElement?.tagName !== "INPUT") {
+    if (
+      e.key === "/" &&
+      document.activeElement !== searchInput &&
+      document.activeElement?.tagName !== "INPUT"
+    ) {
       e.preventDefault();
       searchInput?.focus();
     }

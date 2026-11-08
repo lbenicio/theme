@@ -669,62 +669,6 @@ func replaceHTML(content string, mapping map[string]string, jsRewriteCache *sync
 	return result
 }
 
-func replaceHTMLNode(n *html.Node, mapping map[string]string) {
-	if n.Type == html.ElementNode {
-		for i, attr := range n.Attr {
-			key := strings.ToLower(attr.Key)
-			switch key {
-			case "class":
-				var newClasses []string
-				for _, cls := range strings.Fields(attr.Val) {
-					token := mapping["class:"+cls]
-					if token != "" {
-						newClasses = append(newClasses, token)
-					} else {
-						newClasses = append(newClasses, cls)
-					}
-				}
-				n.Attr[i].Val = strings.Join(newClasses, " ")
-			case "id":
-				token := mapping["id:"+attr.Val]
-				if token != "" {
-					n.Attr[i].Val = token
-				}
-			case "for", "list", "aria-controls", "aria-labelledby", "aria-describedby", "aria-owns", "aria-activedescendant":
-				var refs []string
-				for _, ref := range strings.Fields(attr.Val) {
-					token := mapping["id:"+ref]
-					if token != "" {
-						refs = append(refs, token)
-					} else {
-						refs = append(refs, ref)
-					}
-				}
-				n.Attr[i].Val = strings.Join(refs, " ")
-			case "href":
-				// Replace #id fragment references
-				if strings.HasPrefix(attr.Val, "#") {
-					token := mapping["id:"+attr.Val[1:]]
-					if token != "" {
-						n.Attr[i].Val = "#" + token
-					}
-				}
-			default:
-				if strings.HasPrefix(key, "data-") {
-					dataName := key[5:]
-					token := mapping["data:"+dataName]
-					if token != "" {
-						n.Attr[i].Key = "data-" + token
-					}
-				}
-			}
-		}
-	}
-	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		replaceHTMLNode(c, mapping)
-	}
-}
-
 func replaceCSS(content string, mapping map[string]string) string {
 	// Replace class selectors: .original -> .token
 	// Sort by length descending so longer names get replaced first, preventing
@@ -769,22 +713,6 @@ func replaceCSS(content string, mapping map[string]string) string {
 		content = re.ReplaceAllString(content, "[data-"+mapping[key])
 	}
 	return content
-}
-
-// cssEscape returns the CSS-selector-escaped form of a class name.
-// e.g. "md:flex" -> "md\:flex", "min-h-[calc(100vh-20rem)]" -> "min-h-\[calc\(100vh-10rem\)\]"
-func cssEscape(name string) string {
-	r := strings.NewReplacer(
-		":", "\\:",
-		"[", "\\[",
-		"]", "\\]",
-		"(", "\\(",
-		")", "\\)",
-		".", "\\.",
-		"%", "\\%",
-		"/", "\\/",
-	)
-	return r.Replace(name)
 }
 
 func sortMappingByLength(mapping map[string]string) []string {
@@ -984,27 +912,4 @@ func replaceCSSText(html string, mapping map[string]string) string {
 		}
 		return parts[1] + replaceCSS(parts[2], mapping) + parts[3]
 	})
-}
-
-func applyRegexReplace(content string, mapping map[string]string) string {
-	result := content
-	for key, token := range mapping {
-		parts := strings.SplitN(key, ":", 2)
-		if len(parts) != 2 {
-			continue
-		}
-		typ, orig := parts[0], parts[1]
-		switch typ {
-		case "class":
-			re := regexp.MustCompile(`\b` + regexp.QuoteMeta(orig) + `\b`)
-			result = re.ReplaceAllString(result, token)
-		case "id":
-			re := regexp.MustCompile(`\bid="` + regexp.QuoteMeta(orig) + `"`)
-			result = re.ReplaceAllString(result, `id="`+token+`"`)
-		case "data":
-			re := regexp.MustCompile(`\bdata-` + regexp.QuoteMeta(orig) + `\b`)
-			result = re.ReplaceAllString(result, "data-"+token)
-		}
-	}
-	return result
 }
