@@ -2,7 +2,7 @@
 
 [![Go Report Card](https://goreportcard.lbenicio.dev/badge/github.com/lbenicio/aboutme)](https://goreportcard.lbenicio.dev/report/github.com/lbenicio/aboutme)
 [![Go Report Card](https://goreportcard.lbenicio.dev/badge/github.com/lbenicio/theme)](https://goreportcard.lbenicio.dev/report/github.com/lbenicio/theme)
-![GitHub License](https://img.shields.io/github/license/lbenicio/theme)
+[![GitHub License](https://img.shields.io/badge/license-GNU/GPLv3-blue)](https://raw.githubusercontent.com/lbenicio/theme/refs/heads/main/LICENSE.txt)
 
 
 A modern, production-ready Hugo theme for personal websites, portfolios, and blogs. Built with Tailwind CSS v4, TypeScript, and optimized for performance with multi-variant export support.
