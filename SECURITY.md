@@ -4,7 +4,7 @@ Thank you for helping keep this project and its users safe. This document descri
 
 ## Supported Versions
 
-The following versions of `aboutme-v2-theme` are currently supported with security updates:
+The following versions of `aboutme-theme` are currently supported with security updates:
 
 | Version | Supported |
 | ------: | :-------: |
@@ -15,7 +15,7 @@ The following versions of `aboutme-v2-theme` are currently supported with securi
 
 Please report security issues responsibly and privately.
 
-- Preferred: Open a private report via GitHub Security Advisories — [Create a private advisory](https://github.com/lbenicio/lbenicio/aboutme-v2-theme/security/advisories/new)
+- Preferred: Open a private report via GitHub Security Advisories — [Create a private advisory](https://github.com/lbenicio/lbenicio/aboutme-theme/security/advisories/new)
 - Alternative: If you prefer email, use the contact email published on the site (configured via `NEXT_PUBLIC_CONTACT_EMAIL`). For encrypted mail, you can use the PGP key located at `public/pgp/public.asc` in this repository (served at `/pgp/public.asc` when the site is running).
 
 When reporting, please include:

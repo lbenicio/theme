@@ -1,4 +1,4 @@
-module github.com/lbenicio/aboutme-v2-theme
+module github.com/lbenicio/theme
 
 go 1.26.0
 

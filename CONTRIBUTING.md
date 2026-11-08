@@ -13,7 +13,7 @@ Start by forking the repository to your GitHub account. This creates a copy of t
 Clone your forked repository to your local machine using the following command:
 
 ```bash
-git clone https://github.com/your-username/aboutme-v2-theme.git
+git clone https://github.com/your-username/aboutme-theme.git
 ```
 
 ### 3. Create a Branch

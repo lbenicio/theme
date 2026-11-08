@@ -1,6 +1,9 @@
-# AboutMe v2 Theme
+# Aboutme theme
 
-**Current version:** `0.4.5`
+[![Go Report Card](https://goreportcard.lbenicio.dev/badge/github.com/lbenicio/aboutme)](https://goreportcard.lbenicio.dev/report/github.com/lbenicio/aboutme)
+[![Go Report Card](https://goreportcard.lbenicio.dev/badge/github.com/lbenicio/theme)](https://goreportcard.lbenicio.dev/report/github.com/lbenicio/theme)
+![GitHub License](https://img.shields.io/github/license/lbenicio/theme)
+
 
 A modern, production-ready Hugo theme for personal websites, portfolios, and blogs. Built with Tailwind CSS v4, TypeScript, and optimized for performance with multi-variant export support.
 
@@ -44,26 +47,26 @@ A modern, production-ready Hugo theme for personal websites, portfolios, and blo
    Option 1: Git submodule (recommended for development)
 
     ```bash
-    git submodule add https://github.com/lbenicio/aboutme-v2-theme.git themes/aboutme-v2-theme
+    git submodule add https://github.com/lbenicio/theme.git themes/aboutme-theme
     ```
 
     Option 2: Clone directly
 
     ```bash
-    git clone https://github.com/lbenicio/aboutme-v2-theme.git themes/aboutme-v2-theme
+    git clone https://github.com/lbenicio/theme.git themes/aboutme-theme
     ```
 
 3. **Configure your site**:
    Add to your `hugo.toml`:
 
     ```toml
-    theme = "aboutme-v2-theme"
+    theme = "aboutme-theme"
     ```
 
 4. **Install dependencies**:
 
     ```bash
-    cd themes/aboutme-v2-theme
+    cd themes/aboutme-theme
     ```
 
     ```bash
@@ -87,7 +90,7 @@ A modern, production-ready Hugo theme for personal websites, portfolios, and blo
 ## 📁 Project Structure
 
 ```
-aboutme-v2-theme/
+aboutme-theme/
 ├── assets/
 │   ├── css/  Tailwind CSS entry point
 │   └── js/   JavaScript components
@@ -507,8 +510,8 @@ This theme is licensed under the GPL-3.0 license - see the [LICENSE](LICENSE.txt
 
 ## 📧 Support
 
-- **Issues**: [GitHub Issues](https://github.com/lbenicio/aboutme-v2-theme/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/lbenicio/aboutme-v2-theme/discussions)
+- **Issues**: [GitHub Issues](https://github.com/lbenicio/theme/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/lbenicio/theme/discussions)
 - **Email**: hi@lbeniciod.dev
 
 ## 🔗 Resources
