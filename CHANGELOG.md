@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-11-08
+
+### Added
+
+- Unit tests for the analytics, obfuscation, Open Graph image, and release command packages.
+- CI checks for Prettier formatting, Go linting, unit tests, and Codecov coverage reporting.
+
+### Changed
+
+- Rename the Go module path to `github.com/lbenicio/theme` and require Go 1.27.0.
+- Format maintained frontend assets with Prettier and restrict the auto-merge workflow to the permissions it needs.
+
+### Fixed
+
+- Extract CSS class names without including unescaped pseudo-class suffixes, while preserving escaped class names.
+- Keep analytics endpoint response bodies out of error logs.
+
 ## [0.4.5] - 2026-10-31
 
 ### Performance

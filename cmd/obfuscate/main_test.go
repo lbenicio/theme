@@ -10,7 +10,7 @@ import (
 
 func TestExtractHTMLNamesFindsMarkupAndInlineSelectors(t *testing.T) {
 	content := `<div class="card dark" id="menu" data-track="yes"></div>
-<style>.button:hover { color: red; } [data-state] { color: blue; }</style>
+<style>.button:hover { color: red; } .md\:flex:hover { display: flex; } [data-state] { color: blue; }</style>
 <script>document.querySelector('.action'); document.getElementById('dialog');</script>`
 
 	names := extractHTMLNames(content)
@@ -20,11 +20,14 @@ func TestExtractHTMLNamesFindsMarkupAndInlineSelectors(t *testing.T) {
 	}
 	for _, want := range []string{
 		"class:card", "class:dark", "id:menu", "data:track",
-		"class:button", "data:state", "class:action", "id:dialog",
+		"class:button", "class:md:flex", "data:state", "class:action", "id:dialog",
 	} {
 		if !got[want] {
 			t.Errorf("extracted names do not contain %q; got %v", want, got)
 		}
+	}
+	if got["class:button:hover"] {
+		t.Error("pseudo-class suffix was included in the extracted class name")
 	}
 }
 

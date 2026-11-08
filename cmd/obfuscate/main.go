@@ -348,7 +348,7 @@ func extractCSSNames(content string) []nameItem {
 	for _, m := range blockRe.FindAllStringSubmatch(content, -1) {
 		selector := m[1]
 		// class selectors: .foo or .md\:flex or .min-h-\[calc(...)\] (with escape chars)
-		for _, cm := range regexp.MustCompile(`\.([A-Za-z0-9_\\:\/\-\[\]\(\)\.%]+)`).FindAllStringSubmatch(selector, -1) {
+		for _, cm := range regexp.MustCompile(`\.((?:\\.|[A-Za-z0-9_./()%\[\]-])+)`).FindAllStringSubmatch(selector, -1) {
 			// Unescape CSS class names (e.g. md\:flex -> md:flex, \[ -> [)
 			name := strings.ReplaceAll(cm[1], "\\:", ":")
 			name = strings.ReplaceAll(name, "\\/", "/")
