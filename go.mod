@@ -1,6 +1,6 @@
 module github.com/lbenicio/theme
 
-go 1.26.0
+go 1.27.0
 
 require (
 	golang.org/x/image v0.47.0
