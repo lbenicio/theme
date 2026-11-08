@@ -1,6 +1,6 @@
 # Aboutme theme
 
-[![Go Report Card](https://goreportcard.lbenicio.dev/badge/github.com/lbenicio/aboutme)](https://goreportcard.lbenicio.dev/report/github.com/lbenicio/aboutme)
+[![Go Report Card](https://goreportcard.lbenicio.dev/badge/github.com/lbenicio/theme)](https://goreportcard.lbenicio.dev/report/github.com/lbenicio/theme)
 [![Coverage Status](https://codecov.io/github/lbenicio/theme/coverage.svg?branch=main)](https://codecov.io/github/lbenicio/theme?branch=main)
 [![GitHub License](https://img.shields.io/badge/license-GNU/GPLv3-blue)](https://raw.githubusercontent.com/lbenicio/theme/refs/heads/main/LICENSE.txt)
 
