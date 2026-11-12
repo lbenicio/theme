@@ -27,9 +27,14 @@ A modern, production-ready Hugo theme for personal websites, portfolios, and blo
 
 ### Prerequisites
 
-- **Hugo Extended** v0.152.0 or higher
-- **Node.js** v25.0.0 or higher
-- **npm** (comes with Node.js)
+- **Hugo** v0.163.0 or higher (standard or extended edition)
+- **Dart Sass** with the `sass` executable available on `PATH`
+
+Install Dart Sass with a package manager, or use the [official installation instructions](https://gohugo.io/functions/css/sass/#dart-sass). CI and hosting builds must install Dart Sass before running Hugo. On Cloudflare Pages, set the build command to:
+
+```sh
+npm install --global sass@1.108.0 && hugo
+```
 
 ### Installation
 
@@ -470,6 +475,8 @@ jobs:
               uses: peaceiris/actions-hugo@v2
             - name: Setup Node
               uses: actions/setup-node@v3
+            - name: Install Dart Sass
+              run: npm install --global sass@1.108.0
             - name: Install dependencies
               run: npm install
             - name: Build

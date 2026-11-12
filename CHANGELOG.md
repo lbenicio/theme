@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-11-11
+
+### Changed
+
+- Use Hugo's Dart Sass transpiler and Sass `@use` modules, removing the deprecated LibSass and `@import` paths.
+- Document Dart Sass as a build prerequisite; Hugo Extended is no longer required.
+
 ## [0.5.0] - 2026-11-08
 
 ### Added

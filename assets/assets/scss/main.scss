@@ -1,31 +1,31 @@
 /* ─── Main SCSS Entry Point ────────────────────────────────────────────────────
  * AboutMe Hugo Theme — SCSS + vanilla CSS framework
- * No Node.js dependency required; processed by Hugo Pipes (Dart Sass / LibSass) */
+ * Processed by Hugo Pipes with Dart Sass. */
 
 // 1. Design tokens & CSS custom properties
-@import "variables";
+@use "variables";
 
 // 2. Reset & base styles
-@import "reset";
+@use "reset";
 
 // 3. Utility classes (matching the Tailwind patterns used across layouts)
-@import "typography";
-@import "layout";
-@import "spacing";
-@import "sizing";
-@import "colors";
-@import "borders";
-@import "effects";
-@import "interactive";
+@use "typography";
+@use "layout";
+@use "spacing";
+@use "sizing";
+@use "colors";
+@use "borders";
+@use "effects";
+@use "interactive";
 
 // 4. Component styles
-@import "components";
+@use "components";
 
 // 5. Dark mode overrides
-@import "dark";
+@use "dark";
 
 // 6. Responsive breakpoints
-@import "responsive";
+@use "responsive";
 
 // 7. Dynamic value overrides (calc, arbitrary values)
-@import "dynamic";
+@use "dynamic";
