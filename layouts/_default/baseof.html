@@ -10,6 +10,7 @@
         <title>{{ with $titlePrefix }}{{ . }} · {{ end }}{{ .Site.Title }}</title>
         <meta name="description" content="{{ with .Params.description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}" />
         <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ .Site.BaseURL }}index.xml" />
+        {{ with .OutputFormats.Get "markdown" }}<link rel="alternate" type="{{ .MediaType.Type }}" href="{{ .Permalink }}" />{{ end }}
         {{ partial "head-meta.html" . }} {{ partial "head-icons.html" . }} {{ partial "seo-meta.html" . }} {{ partial "ld-website-person.html" . }} {{ partial "ld-breadcrumbs.html" . }}
         {{/* SCSS via Hugo Pipes, then obfuscated */}}
         {{ $sassOptions := dict "transpiler" "dartsass" }}

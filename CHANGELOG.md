@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Markdown output for home, single, list, taxonomy, term, and 404 pages.
+
 ## [0.6.0] - 2026-11-11
 
 ### Changed
