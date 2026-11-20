@@ -1,7 +1,6 @@
-{{/* Dynamic meta & analytics based on params */}}
+{{/* Dynamic metadata and production analytics */}}
 {{ $siteUrl := .Site.Params.siteUrl }}
 {{ $basePath := trim .Site.Params.basePath "/" }}
-{{ $appMode := upper .Site.Params.appMode }}
 {{ $environment := hugo.Environment }}
 {{ $isDev := or (eq $environment "development") (eq (getenv "HUGO_ENV") "development") (eq (getenv "HUGO_ENVIRONMENT") "development") }}
 {{ $isProd := or (eq $environment "production") (eq (getenv "HUGO_ENV") "production") (eq (getenv "HUGO_ENVIRONMENT") "production") }}
@@ -32,39 +31,8 @@
   <link rel="stylesheet" href="{{ $f.RelPermalink }}" />
 {{ end }}
 
-{{/* Render analytics only in production and when a website ID is configured */}}
-{{/* Choose an Umami site ID based on the current export variant. Preference order:
-   - aboutme (FULL/ABOUT_ONLY): use umamiAboutmeId
-   - blog (BLOG_ONLY): use umamiBlogId
-   - publications (PUBLICATIONS_ONLY): use umamiPublicationsId
-   - single variants (SINGLE): use umamiNewsletterId / umamiSocialsId / umamiContactId when appropriate
-   - otherwise fall back to the legacy umamiWebsiteId
-*/}}
-{{ $scratch := newScratch }}
-{{ $scratch.Set "umamiId" .Site.Params.umamiWebsiteId }}
-
-{{ if or (eq $appMode "ABOUT_ONLY") (eq $appMode "FULL") }}
-  {{ with .Site.Params.umamiAboutmeId }}{{ $scratch.Set "umamiId" . }}{{ end }}
-{{ else if eq $appMode "BLOG_ONLY" }}
-  {{ with .Site.Params.umamiBlogId }}{{ $scratch.Set "umamiId" . }}{{ end }}
-{{ else if eq $appMode "PUBLICATIONS_ONLY" }}
-  {{ with .Site.Params.umamiPublicationsId }}{{ $scratch.Set "umamiId" . }}{{ end }}
-{{ else if eq $appMode "SINGLE" }}
-  {{ $sc := .Site.Params.singleContent }}
-  {{ if eq $sc "content/single/newsletter.md" }}
-    {{ with .Site.Params.umamiNewsletterId }}{{ $scratch.Set "umamiId" . }}{{ end }}
-  {{ else if eq $sc "content/single/socials.md" }}
-    {{ with .Site.Params.umamiSocialsId }}{{ $scratch.Set "umamiId" . }}{{ end }}
-  {{ else if eq $sc "content/single/contact.md" }}
-    {{ with .Site.Params.umamiContactId }}{{ $scratch.Set "umamiId" . }}{{ end }}
-  {{ else if eq $sc "content/single/marketing.md" }}
-    {{ with .Site.Params.umamiMarketingId }}{{ $scratch.Set "umamiId" . }}{{ end }}
-  {{ else if eq $sc "content/single/apps.md" }}
-    {{ with .Site.Params.umamiAppsId }}{{ $scratch.Set "umamiId" . }}{{ end }}
-  {{ end }}
-{{ end }}
-
-{{ $umamiId := $scratch.Get "umamiId" }}
-{{ if and $isProd $umamiId }}
-<script async defer data-website-id="{{ $umamiId }}" data-auto-track="true" src="{{ .Site.Params.umamiScriptUrl | default "https://cloud.umami.is/script.js" }}"></script>
+{{/* Use Hugo's GA4 partial only for production builds. It reads services.googleAnalytics
+    and honors Hugo's Google Analytics privacy settings, including Do Not Track. */}}
+{{ if $isProd }}
+  {{ partial "google_analytics.html" . }}
 {{ end }}

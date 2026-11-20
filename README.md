@@ -18,7 +18,7 @@ A modern, production-ready Hugo theme for personal websites, portfolios, and blo
 - **Performance**: Optimized assets, lazy loading, and efficient caching strategies
 - **Accessibility**: WCAG 2.1 compliant with semantic HTML and ARIA labels
 - **Contact Form**: Encrypted PGP contact form with spam protection
-- **Analytics Integration**: Built-in support for Umami and custom analytics
+- **Analytics Integration**: Production-only Google Analytics 4 using Hugo's embedded partial
 - **Content Sections**: About, Timeline, Publications, Reading List, Blog Posts, and Contact
 - **Responsive Images**: AVIF/WebP/PNG fallbacks with automatic optimization
 - **Internationalization**: Multi-language support with i18n ready structure
@@ -152,10 +152,6 @@ Add these to your site's `hugo.toml` under `[params]`:
   linkedinHandler = "your-profile"
   twitterHandler = "yourusername"
 
-  # Analytics
-  umamiWebsiteId = "your-website-id"
-  umamiScriptUrl = "https://your-analytics-url/script.js"
-
   # Newsletter
   newsletterPostUrl = "https://your-newsletter-url"
   newsletterCheckboxId = "your-checkbox-id"
@@ -174,6 +170,20 @@ Add these to your site's `hugo.toml` under `[params]`:
   interests = ["Interest 1", "Interest 2", "Interest 3"]
   researchInterests = ["Research Interest 1", "Research Interest 2"]
 ```
+
+### Google Analytics
+
+Set a GA4 measurement ID outside `[params]` in the site's Hugo configuration. The theme renders Hugo's embedded Google Analytics partial only for production builds; sites without an ID do not load an analytics script.
+
+```toml
+[services.googleAnalytics]
+id = "G-MEASUREMENT_ID"
+
+[privacy.googleAnalytics]
+respectDoNotTrack = true
+```
+
+The theme sends GA4 events for elements marked with `data-ga-event` and for mobile navigation open/close actions. Hugo's embedded partial honors the configured Google Analytics privacy settings.
 
 ### Content Configuration
 

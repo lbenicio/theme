@@ -1,4 +1,23 @@
 <script>
+  function trackAnalyticsEvent(eventName, parameters) {
+    try {
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', eventName, parameters || {});
+      }
+    } catch (e) {}
+  }
+  window.__trackAnalyticsEvent = trackAnalyticsEvent;
+  document.addEventListener('click', function (event) {
+    const target = event.target;
+    const trackedElement = target && typeof target.closest === 'function'
+      ? target.closest('[data-ga-event]')
+      : null;
+    if (!trackedElement) return;
+    trackAnalyticsEvent(trackedElement.getAttribute('data-ga-event'), {
+      page_path: location.pathname,
+    });
+  });
+
   // Three-way theme toggle: light → dark → system
   (function () {
     try {
@@ -121,8 +140,8 @@
       if(closeBtn) closeBtn.focus();
       // Analytics: track menu open
       try {
-        if (window.umami && typeof window.umami.track === 'function') {
-          window.umami.track('mobile_menu_open', { page: location.pathname, theme: getTheme(), source: src || 'programmatic' });
+        if (typeof window.__trackAnalyticsEvent === 'function') {
+          window.__trackAnalyticsEvent('mobile_menu_open', { page_path: location.pathname, theme: getTheme(), source: src || 'programmatic' });
         }
       } catch(e) {}
     }
@@ -142,8 +161,8 @@
       trigger.focus();
       // Analytics: track menu close
       try {
-        if (window.umami && typeof window.umami.track === 'function') {
-          window.umami.track('mobile_menu_close', { page: location.pathname, theme: getTheme(), source: src || 'programmatic' });
+        if (typeof window.__trackAnalyticsEvent === 'function') {
+          window.__trackAnalyticsEvent('mobile_menu_close', { page_path: location.pathname, theme: getTheme(), source: src || 'programmatic' });
         }
       } catch(e) {}
     }
@@ -334,7 +353,7 @@
           aria-controls="mobile-drawer"
           aria-expanded="false"
           onclick="window.__openMobileMenu('button')"
-          data-umami-event="mobile_menu_open_click"
+          data-ga-event="mobile_menu_open_click"
         >
           <svg xmlns="http://www.w3.org/2000/svg" {{ partial "obfuscate/cls" "h-6 w-6" | safeHTMLAttr }} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
           <span {{ partial "obfuscate/cls" "sr-only" | safeHTMLAttr }}>Open menu</span>
@@ -346,7 +365,7 @@
 </header>
 
 {{/* Drawer root and overlay as direct children of <body> to avoid header stacking context issues */}}
-<div id="mobile-drawer-overlay" {{ partial "obfuscate/cls" "fixed inset-0 z-1000" | safeHTMLAttr }} style="background-color: hsl(var(--background));" hidden onclick="window.__closeMobileMenu('overlay')" data-umami-event="mobile_menu_overlay_click"></div>
+<div id="mobile-drawer-overlay" {{ partial "obfuscate/cls" "fixed inset-0 z-1000" | safeHTMLAttr }} style="background-color: hsl(var(--background));" hidden onclick="window.__closeMobileMenu('overlay')" data-ga-event="mobile_menu_overlay_click"></div>
 <aside
   id="mobile-drawer"
   {{ partial "obfuscate/cls" "fixed inset-y-0 right-0 z-1001 w-80 max-w-[85vw] border-l bg-background text-foreground shadow-xl flex flex-col" | safeHTMLAttr }}
@@ -361,7 +380,7 @@
       <img src="{{ (printf "%s/%s" "static/favicon" "favicon.svg") | relURL }}" alt="Logo" width="24" height="24" {{ partial "obfuscate/cls" "h-6 w-6" | safeHTMLAttr }} />
       <span {{ partial "obfuscate/cls" "font-semibold text-base font-headline" | safeHTMLAttr }}>{{ .Site.Title }}</span>
     </a>
-  <button id="mobile-drawer-close" type="button" {{ partial "obfuscate/cls" "inline-flex h-9 w-9 items-center justify-center rounded-md hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" | safeHTMLAttr }} aria-label="Close menu" onclick="window.__closeMobileMenu('button')" data-umami-event="mobile_menu_close_click">
+  <button id="mobile-drawer-close" type="button" {{ partial "obfuscate/cls" "inline-flex h-9 w-9 items-center justify-center rounded-md hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" | safeHTMLAttr }} aria-label="Close menu" onclick="window.__closeMobileMenu('button')" data-ga-event="mobile_menu_close_click">
       <svg xmlns="http://www.w3.org/2000/svg" {{ partial "obfuscate/cls" "h-5 w-5" | safeHTMLAttr }} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
       <span {{ partial "obfuscate/cls" "sr-only" | safeHTMLAttr }}>Close</span>
     </button>

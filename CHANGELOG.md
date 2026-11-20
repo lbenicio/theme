@@ -7,9 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-11-20
+
 ### Added
 
 - Markdown output for home, single, list, taxonomy, term, and 404 pages.
+
+### Changed
+
+- Replace Umami with Hugo's embedded Google Analytics 4 partial, configured through `services.googleAnalytics` and limited to production builds.
+- Send theme navigation events through Google Analytics using `gtag` and `data-ga-event` attributes.
 
 ## [0.6.0] - 2026-11-11
 
