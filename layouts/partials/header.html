@@ -177,7 +177,6 @@
 {{ $siteMode := .Site.Params.appMode | default "FULL" }}
 {{ $aboutOrigin := .Site.Params.aboutOrigin | default "" }}
 {{ $blogOrigin := .Site.Params.blogOrigin | default "" }}
-{{ $publicationsOrigin := .Site.Params.publicationsOrigin | default "" }}
 
 {{/* Build nav links — unified menu for all multi-page modes.
      SINGLE: only Home.
@@ -195,22 +194,22 @@
 {{ $blogLocal  := or (eq $siteMode "FULL") (eq $siteMode "BLOG_ONLY") }}
 {{ $pubsLocal  := or (eq $siteMode "FULL") (eq $siteMode "PUBLICATIONS_ONLY") (eq $siteMode "ABOUT_ONLY") $hasPubsSection }}
 
-{{/* Resolve external base URLs (empty string → fall back to internal) */}}
+{{/* Resolve external base URLs. */}}
 {{ $aboutBase := "" }}
 {{ if and (not $aboutLocal) (ne (strings.TrimSpace $aboutOrigin) "") }}
-  {{ $aboutBase = $aboutOrigin }}
+  {{ $aboutBase = strings.TrimRight "/" $aboutOrigin }}
 {{ end }}
 {{ $aboutExt := ne $aboutBase "" }}
 
 {{ $blogBase := "" }}
 {{ if and (not $blogLocal) (ne (strings.TrimSpace $blogOrigin) "") }}
-  {{ $blogBase = $blogOrigin }}
+  {{ $blogBase = strings.TrimRight "/" $blogOrigin }}
 {{ end }}
 {{ $blogExt := ne $blogBase "" }}
 
 {{ $pubBase := "" }}
-{{ if and (not $pubsLocal) (ne (strings.TrimSpace $publicationsOrigin) "") }}
-  {{ $pubBase = $publicationsOrigin }}
+{{ if and (not $pubsLocal) (ne (strings.TrimSpace $aboutOrigin) "") }}
+  {{ $pubBase = printf "%s/publications/" (strings.TrimRight "/" $aboutOrigin) }}
 {{ end }}
 {{ $pubExt := ne $pubBase "" }}
 

@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-11-24
+
+### Changed
+
+- Derive the external Publications navigation link from `aboutOrigin`; remove the separate `publicationsOrigin` setting.
+- Normalize trailing slashes on external About and Blog origins before appending navigation paths.
+
 ## [0.6.1] - 2026-11-20
 
 ### Added
