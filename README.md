@@ -185,6 +185,17 @@ respectDoNotTrack = true
 
 The theme sends GA4 events for elements marked with `data-ga-event` and for mobile navigation open/close actions. Hugo's embedded partial honors the configured Google Analytics privacy settings.
 
+### Google Ads
+
+To connect a Google Ads destination, set its conversion ID under `[params]`:
+
+```toml
+[params]
+googleAdsTagId = "AW-CONVERSION_ID"
+```
+
+The theme configures this destination through the existing Google tag when a GA4 measurement ID is present, avoiding a duplicate `gtag.js` load. If the site has no GA4 ID, the theme initializes the Google Ads tag on its own. The Ads destination is production-only, and it honors `privacy.googleAnalytics.disable` and `privacy.googleAnalytics.respectDoNotTrack`.
+
 ### Content Configuration
 
 The theme uses frontmatter in your content files to configure data structures:

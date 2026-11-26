@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-11-26
+
+### Added
+
+- Configure a production-only Google Ads destination through the existing Google tag, with standalone initialization when GA4 is not configured.
+- Honor Hugo's Google Analytics disable and Do Not Track privacy settings for the Google Ads destination.
+
 ## [0.7.0] - 2026-11-24
 
 ### Changed

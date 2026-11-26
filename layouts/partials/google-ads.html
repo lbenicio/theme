@@ -1,0 +1,32 @@
+{{- $tagID := .Site.Params.googleAdsTagId -}}
+{{- $googleAnalytics := .Site.Config.Services.GoogleAnalytics -}}
+{{- $privacy := .Site.Config.Privacy.GoogleAnalytics -}}
+{{- if and $tagID (not $privacy.Disable) -}}
+  {{- if $googleAnalytics.ID -}}
+<script>
+    (function () {
+        var respectDoNotTrack = {{ $privacy.RespectDoNotTrack }};
+        var dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+        var doNotTrack = dnt === "1" || dnt === "yes";
+        if (!respectDoNotTrack || !doNotTrack) {
+            window.gtag("config", {{ $tagID | jsonify | safeJS }});
+        }
+    })();
+</script>
+  {{- else -}}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ $tagID | urlquery }}"></script>
+<script>
+    (function () {
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+        window.gtag("js", new Date());
+        var respectDoNotTrack = {{ $privacy.RespectDoNotTrack }};
+        var dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+        var doNotTrack = dnt === "1" || dnt === "yes";
+        if (!respectDoNotTrack || !doNotTrack) {
+            window.gtag("config", {{ $tagID | jsonify | safeJS }});
+        }
+    })();
+</script>
+  {{- end -}}
+{{- end -}}
