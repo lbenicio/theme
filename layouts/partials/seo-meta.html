@@ -1,8 +1,8 @@
 {{/* Open Graph & Twitter meta tags derived from page/site params (Hugo v0.111
 compatible) */}} {{ $siteUrl := .Site.Params.siteUrl }} {{ $basePath :=
 .Site.Params.basePath | default "" }} {{/* Title: default to site title, prepend
-page title when available */}} {{ $title := .Site.Title }} {{ with .Title }}{{
-$title = printf "%s · %s" . $.Site.Title }}{{ end }} {{/* Description: prefer
+page title only when it adds information */}} {{ $title := .Site.Title }} {{ with .Title }}{{ if ne . $.Site.Title }}{{
+$title = printf "%s · %s" . $.Site.Title }}{{ end }}{{ end }} {{/* Description: prefer
 front matter, else site description */}} {{ $desc := .Site.Params.description }}
 {{ with .Params.description }}{{ $desc = . }}{{ end }} {{/* Type: article for
 blog/publications, website otherwise */}} {{ $type := "website" }} {{ if or (eq .Section "post") (eq .Section "publications") }}{{ $type = "article" }}{{ end }}

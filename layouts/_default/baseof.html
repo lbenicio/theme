@@ -5,10 +5,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
         {{/* ── Class obfuscation map (site-wide, cached) ── */}}
         {{ $cls := partialCached "obfuscate/map" . }}
-        {{/* Compute dynamic title */}} {{ $siteMode := .Site.Params.appMode | default "FULL" }} {{ $bm := .Site.Params.blogMode }} {{ $isBlogMode := or (eq $siteMode "BLOG_ONLY") (eq $bm true) (eq $bm "true") }} {{
-        $titlePrefix := .Title }} {{ if and .IsHome $isBlogMode }}{{ $titlePrefix = "Blog" }}{{ end }}
+        {{/* Compute dynamic title, avoiding a repeated site name. */}}
+        {{ $siteMode := .Site.Params.appMode | default "FULL" }}
+        {{ $bm := .Site.Params.blogMode }}
+        {{ $isBlogMode := or (eq $siteMode "BLOG_ONLY") (eq $bm true) (eq $bm "true") }}
+        {{ $titlePrefix := .Title }}
+        {{ if and .IsHome $isBlogMode }}{{ $titlePrefix = "Blog" }}{{ end }}
+        {{ if eq $titlePrefix .Site.Title }}{{ $titlePrefix = "" }}{{ end }}
         <title>{{ with $titlePrefix }}{{ . }} · {{ end }}{{ .Site.Title }}</title>
-        <meta name="description" content="{{ with .Params.description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}" />
         <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ .Site.BaseURL }}index.xml" />
         {{ with .OutputFormats.Get "markdown" }}<link rel="alternate" type="{{ .MediaType.Type }}" href="{{ .Permalink }}" />{{ end }}
         {{ partial "head-meta.html" . }} {{ partial "head-icons.html" . }} {{ partial "seo-meta.html" . }} {{ partial "ld-website-person.html" . }} {{ partial "ld-breadcrumbs.html" . }}

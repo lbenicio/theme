@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.2] - 2026-11-27
+
+### Fixed
+
+- Avoid repeating the site name in document and social titles when a page title matches it.
+- Emit a single SEO description meta tag per page.
+
 ## [0.7.1] - 2026-11-26
 
 ### Added
